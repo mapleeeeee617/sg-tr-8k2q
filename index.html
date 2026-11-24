@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SG トレーニング</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SGトレ">
+<meta name="theme-color" content="#16181d">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 体育館のスコアボードのように、迷わず押せる道具
+   IDEA: バスケのスコアボード＋部室の練習メニュー表
+   PICTURE: 今日のメニューを大きな数字のカードで。セットはタップで点灯するランプ
+   COLOUR and TYPE: ボールのオレンジ、ボード用の黒、点灯の青。Zen Kaku Gothic New＋数字はBarlow Condensed
+   LAYOUT: 上に今日の見出し、下に固定タブ。1列でスマホ優先 */
+:root{color-scheme:light dark;--bg:light-dark(#fbfaf8,#121317);--card:light-dark(#fff,#1c1e24);--ink:light-dark(#16181d,#eef0f4);--mute:light-dark(#5d6270,#a3a9b8);--line:light-dark(#e6e2dc,#2c2f38);--or:#e8641c;--or2:light-dark(#fde7da,#3a2316);--bl:#1f6feb;--bl2:light-dark(#e3edff,#16233d);--board:#16181d}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Zen Kaku Gothic New",system-ui,sans-serif;overflow-x:clip;padding-bottom:88px}
+.num{font-family:"Barlow Condensed",sans-serif;font-weight:800;letter-spacing:.01em}
+header{background:var(--board);color:#fff;padding:18px max(5vw,16px) 20px;position:relative;overflow:hidden}
+header h1{margin:0;font-size:15px;font-weight:700;color:#ffb48a}
+header .big{font-size:clamp(34px,9vw,52px);line-height:1.05;margin:4px 0 2px;font-weight:900;text-wrap:balance}
+header .sub{color:#c9ccd6;font-size:14px}
+header svg{position:absolute;right:-22px;top:-18px;width:118px;height:118px;opacity:.9}header h1,header .big,header .sub{position:relative;padding-right:100px}
+main{max-width:760px;margin:0 auto;padding:16px max(4vw,14px)}
+section{display:none}section.on{display:block}
+h2{font-size:22px;margin:18px 0 10px;line-height:1.2}
+h3{font-size:17px;margin:18px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.ex{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;align-items:center}
+.ex .nm{font-weight:700;font-size:17px;line-height:1.35}
+.ex .rx{font-size:26px;color:var(--or);text-align:right;white-space:nowrap}
+.lamps{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.lamp{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:transparent;color:var(--mute);font:800 18px "Barlow Condensed";cursor:pointer}
+.lamp.done{background:var(--bl);border-color:var(--bl);color:#fff;transform:scale(1.04)}
+@media (prefers-reduced-motion:no-preference){.lamp{transition:background .15s,transform .15s}}
+.row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+button,.btn,select,input,textarea{font:inherit;font-size:16px}
+.btn{min-height:44px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.p{background:var(--or);border-color:var(--or);color:#fff;font-weight:700}
+.btn:focus-visible,.lamp:focus-visible,nav a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--bl);outline-offset:2px}
+details{grid-column:1/-1}.sim{width:100%;max-width:380px;height:auto;display:block;margin:8px auto 4px;background:var(--bg);border:1px solid var(--line);border-radius:12px}.yt{color:var(--or);font-weight:700;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;min-height:36px}.chk .yt{margin-left:auto;flex:none}summary{cursor:pointer;color:var(--mute);font-size:14px;min-height:32px}
+.tip{font-size:14px;color:var(--mute);margin:4px 0 0}
+.last{grid-column:1/-1;font-size:14px;color:var(--bl);font-weight:700}
+.seg{display:flex;gap:8px;margin:8px 0}.seg .btn{flex:1;justify-content:center}.seg .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.chk:last-child{border:0}.chk input{width:24px;height:24px;margin-top:3px;accent-color:var(--bl);flex:none}
+.chk b{display:block}.chk span{font-size:14px;color:var(--mute)}
+.chk .btn{margin-left:auto;flex:none}
+.warn{background:var(--or2);border-radius:12px;padding:12px 14px;font-size:15px}
+.plan{list-style:none;padding:0;margin:0}
+.plan li{display:grid;grid-template-columns:4.6em minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.plan .d{font-size:22px;line-height:1;white-space:nowrap}.plan .d small{display:block;font:13px "Zen Kaku Gothic New";color:var(--mute)}
+.plan .t{font-size:14px;color:var(--mute)}.plan .m{font-weight:700}
+.plan li.today{background:var(--bl2);border-radius:10px}
+.tag{font-size:13px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;text-decoration:none}
+.tA{background:var(--or);color:#fff}.tB{background:var(--bl);color:#fff}.tX{background:var(--line);color:var(--ink)}
+form.card{display:grid;gap:10px}
+label{font-size:14px;color:var(--mute);display:grid;gap:4px}
+input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.log{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.log .w{font-size:22px;color:var(--or);text-align:right;white-space:nowrap}
+.log .n{font-size:14px;color:var(--mute);grid-column:1/-1;overflow-wrap:anywhere}
+.log .x{background:none;border:0;color:var(--mute);font-size:13px;cursor:pointer;justify-self:end;grid-column:2;min-height:32px}
+.note{font-size:13px;color:var(--mute)}
+.timer{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--board);color:#fff;border-radius:99px;padding:8px 18px;font-size:30px;display:none;z-index:5;box-shadow:0 6px 20px #0004}
+.timer.on{display:block}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom);z-index:4}
+nav a{min-height:60px;display:grid;place-items:center;text-decoration:none;color:var(--mute);font-size:13px;font-weight:700;border-top:3px solid transparent}
+nav a svg{width:22px;height:22px;display:block;margin:0 auto 2px}
+nav a.on{color:var(--or);border-top-color:var(--or)}
+.hero{background:var(--board);color:#fff;border:0}
+.hero .k{font-size:44px;line-height:1;color:#ffb48a}
+.hero p{margin:6px 0 10px;color:#c9ccd6}
+</style>
+</head>
+<body>
+<header>
+  <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#e8641c"/><circle cx="50" cy="50" r="46" fill="none" stroke="#16181d" stroke-width="3"/><path d="M4 50h92M50 4v92M18 18c18 14 18 50 0 64M82 18c-18 14-18 50 0 64" fill="none" stroke="#16181d" stroke-width="3"/><ellipse cx="36" cy="30" rx="14" ry="7" fill="#fff" opacity=".18" transform="rotate(-30 36 30)"/></svg>
+  <h1>目標：新人戦のセレクションに選ばれる（SG）</h1>
+  <div class="big" id="hdBig">今日のメニュー</div>
+  <div class="sub" id="hdSub"></div>
+</header>
+<main>
+<section id="today">
+  <div class="card hero" id="todayHero"></div>
+  <h3>毎日やること</h3>
+  <div class="card" id="todayDaily"></div>
+  <h3>次のジム</h3>
+  <ul class="plan card" id="nextList"></ul>
+</section>
+
+<section id="gym">
+  <div class="seg"><a class="btn" id="segA" href="#gym-a">Day A 脚・肩</a><a class="btn" id="segB" href="#gym-b">Day B お尻・上半身</a></div>
+  <p class="note">丸をタップするとセット完了。重さと回数は筋トレMEMOに記録する。メインの種目は「あと1〜3回できる」ところで止める。</p>
+  <div id="gymList"></div>
+  <div class="card" id="hiit"><b>バイクHIIT（予定にある日だけ）</b><p class="tip">30秒全力＋30秒休憩を8〜10本。予定に「＋バイクHIIT」とある日に、最後に行う。</p></div>
+</section>
+
+<section id="daily">
+  <h2>体幹（毎日・練習前）</h2>
+  <div class="card" id="coreList"></div>
+  <h2>足首（毎日・体幹と一緒に）</h2>
+  <p class="note">バランス練習だけでも足首捻挫のリスクは約35%下がる。簡単になったら目を閉じる、タオルの上で行う。</p>
+  <div class="card" id="ankleList"></div>
+  <h2>動的ストレッチ（練習・ジムの前）</h2>
+  <div class="card" id="dynList"></div>
+  <h2>静的ストレッチ（練習後・寝る前）</h2>
+  <p class="note">「30秒」を押すとタイマーが動きます。各部位2回ずつ。</p>
+  <div class="card" id="stList"></div>
+  <div class="warn">座って前屈するストレッチと上体起こし・クランチはやらない。脚にしびれが走ったら、その姿勢はすぐやめる。</div>
+</section>
+
+<section id="plan">
+  <h2>11〜12月の予定</h2>
+  <p class="note">ジムの日をタップするとそのメニューへ。練習が2時間あった日は、ジムに行かなくてもOK。</p>
+  <ul class="plan" id="planList"></ul>
+  <h2>5月までの流れ</h2>
+  <div class="card"><b>12〜2月：基礎づくり</b><p class="tip">このメニューを重さ重視で。最初の1か月はフォームを固める。</p></div>
+  <div class="card"><b>3〜4月：パワーへの転換</b><p class="tip">重さは少し下げて、挙げる速さを重視。ジャンプは週80〜120回の接地が目安。</p></div>
+  <div class="card"><b>大会前2週間：疲労を抜く</b><p class="tip">セット数を半分に。重さは落とさない。</p></div>
+  <div class="warn">デッドリフト・バーベルスクワット・立ってのプレスはやらない。脚に力が入りにくい、尿や便が出にくいなどの症状が出たらすぐ受診。始める前に整形外科か理学療法士に一度確認を。</div>
+</section>
+
+</main>
+<div class="timer num" id="timer" role="status"></div>
+<nav aria-label="メニュー">
+  <a href="#today" data-v="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>今日</a>
+  <a href="#gym-a" data-v="gym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/></svg>ジム</a>
+  <a href="#daily" data-v="daily"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M12 7v7l-4 6M12 14l4 6M6 10h12"/></svg>体幹・足首</a>
+  <a href="#plan" data-v="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>予定</a>
+</nav>
+<script>
+{
+const A=[
+ {id:"a1",n:"ボックスジャンプ",s:4,r:"3回",t:"1回ずつ全力。台の上に静かに着地する。"},
+ {id:"a2",n:"ブルガリアンスクワット（ダンベル）",s:4,r:"6〜8回",t:"片脚ずつ。ダンベルは両手に下げて、担がない。"},
+ {id:"a3",n:"レッグカール",s:3,r:"10回",t:"もも裏。下ろすときもゆっくり。"},
+ {id:"a4",n:"シーテッドダンベルショルダープレス",s:3,r:"8〜10回",t:"背もたれ付きで座る。腰を反らさない。"},
+ {id:"a5",n:"サイドレイズ",s:4,r:"12〜15回",t:"肩の横。限界まで追い込んでOK。"},
+ {id:"a6",n:"ラットプルダウン",s:3,r:"10回",t:"胸に向かって引く。"},
+ {id:"a7",n:"ケーブルプッシュダウン",s:3,r:"10〜12回",t:"三頭筋。肘を体の横で固定する。"},
+ {id:"a8",n:"デッドバグ＋サイドプランク",s:3,r:"8回＋30秒",t:"腰を動かさずに固める。"}];
+const B=[
+ {id:"b1",n:"横方向のバウンド",s:4,r:"左右4回",t:"着地でピタッと止まる。膝を内側に入れない。"},
+ {id:"b2",n:"ヒップスラスト",s:4,r:"8回",t:"上で腰を反らさず、お尻を締める。"},
+ {id:"b3",n:"ステップアップ",s:3,r:"8回",t:"片脚ずつ。ダンベルは両手に下げる。"},
+ {id:"b4",n:"ノルディックハムストリング",s:3,r:"5回",t:"膝を固定して、ゆっくり前に倒れる。"},
+ {id:"b5",n:"ダンベルベンチプレス",s:3,r:"8回",t:"腰を大きく反らさない。潰れたら横に下ろせる。"},
+ {id:"b6",n:"チェストサポートロウ",s:3,r:"10回",t:"胸を台につけて行う。腰に負担がかからない。"},
+ {id:"b7",n:"リアレイズ／フェイスプル",s:3,r:"15回",t:"肩の後ろ。シュートの肩を安定させる。"},
+ {id:"b8",n:"ケーブルオーバーヘッドエクステンション",s:3,r:"12回",t:"三頭筋。限界まで追い込んでOK。"},
+ {id:"b9",n:"バードドッグ＋パロフプレス",s:3,r:"8回＋10回",t:"体幹をひねられないように固める。"}];
+const CORE=[["c1","マッギル式カールアップ","10秒×5回","片膝を立て、両手を腰の下に。頭と肩だけ少し浮かせる"],["c2","サイドプランク","左右20〜30秒×3回","体を一直線に"],["c3","バードドッグ","左右10秒キープ×5回","腰を反らさない"],["c4","デッドバグ","8回×2セット","腰を床につけたまま"]];
+const ANK=[["k1","片脚立ち","左右30秒×2回","慣れたら目を閉じる。タオルの上で"],["k2","片脚立ち＋ボールキャッチ","左右20回","壁とボールをやり取り"],["k3","片脚ホップで着地を止める","前・横 左右5回","着地後2秒静止。膝を内側に入れない"],["k4","片脚カーフレイズ","左右15回×2","段差でかかとを深く下ろす"],["k5","壁に膝を寄せる足首ストレッチ","左右30秒×2回","かかとを浮かせない"]];
+const DYN=[["d1","レッグスイング","前後・左右 各10回",""],["d2","ランジ＋上体ひねり","左右5回",""],["d3","腕回し","前後10回",""]];
+const ST=[["s1","股関節の前側","片膝立ち。腰は反らさない"],["s2","お尻","仰向けで足を4の字に組む"],["s3","もも裏","仰向けで、タオルを足にかけて脚を上げる"],["s4","ふくらはぎ・足首","壁に向かって膝を前に出す"],["s5","胸・背中の横","ドア枠、または広背筋のストレッチ"],["s6","胸の背骨","横向きに寝て上の腕を開く"]];
+const P=[
+["2026-11-24","練習 17:15","体幹・ストレッチ",""],["2026-11-25","練習 8:30","体幹・ストレッチ",""],["2026-11-26","free","Day A","A"],["2026-11-27","練習 18:00","体幹・ストレッチ",""],["2026-11-28","WT／練習 18:00","チームのWTのみ",""],["2026-11-29","試合 14:00","試合",""],["2026-11-30","free","Day B","B"],
+["2026-12-01","練習 17:15","体幹・ストレッチ",""],["2026-12-02","練習 19:00","体幹・ストレッチ",""],["2026-12-03","練習 19:30","体幹・ストレッチ",""],["2026-12-04","free","Day B＋バイクHIIT","B"],["2026-12-05","練習 10:00","体幹・ストレッチ",""],["2026-12-06","紅白戦 17:00","紅白戦",""],["2026-12-07","free","Day A","A"],["2026-12-08","全体MTG 18:15","体幹・ストレッチ",""],
+["2026-12-09","free","Day B","B"],["2026-12-10","free","シュート練",""],["2026-12-11","free","Day A","A"],["2026-12-12","free","休み",""],["2026-12-13","free","Day B＋バイクHIIT","B"],["2026-12-14","大掃除 18:15","シュート練",""],["2026-12-15","free","Day A","A"],["2026-12-16","free","シュート練",""],["2026-12-17","free","Day B＋バイクHIIT","B"],["2026-12-18","free","シュート練",""],["2026-12-19","free","休み（翌日部内戦）",""],["2026-12-20","部内戦 15:00","部内戦",""],["2026-12-21","free","休み",""],["2026-12-22","free","Day A","A"],["2026-12-23","free","シュート練",""],["2026-12-24","free","Day B＋バイクHIIT","B"],["2026-12-25","冬季休業","シュート練",""],["2026-12-26","free","休み",""],["2026-12-27","free","Day A","A"],["2026-12-28","free","シュート練",""],["2026-12-29","free","Day B＋バイクHIIT","B"],["2026-12-30","free","休み",""]];
+
+const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+const Q={a1:"ボックスジャンプ やり方",a2:"ブルガリアンスクワット ダンベル やり方",a3:"ライイングレッグカール やり方",a4:"シーテッド ダンベルショルダープレス やり方",a5:"サイドレイズ ダンベル やり方",a6:"ラットプルダウン やり方",a7:"ケーブル プッシュダウン やり方",a8:"デッドバグ サイドプランク やり方",b1:"ラテラルバウンド やり方",b2:"ヒップスラスト やり方",b3:"ダンベル ステップアップ やり方",b4:"ノルディックハムストリング やり方",b5:"ダンベルベンチプレス やり方",b6:"チェストサポーテッドロウ やり方",b7:"フェイスプル やり方",b8:"ケーブル オーバーヘッドエクステンション やり方",b9:"バードドッグ パロフプレス やり方"};
+[...A,...B].forEach(e=>e.q=Q[e.id]);
+const ST0=x=>[x,20,x,31,x,70,x,99,x,128,x,99,x,128,x,50,x+1,68,x,50,x+1,68];
+const SIM={
+a1:{p:[ST0(70),[80,45,78,55,62,88,85,100,72,128,85,100,72,128,68,70,55,78,68,70,55,78],[115,12,113,23,108,60,125,70,120,92,125,70,120,92,118,12,122,0,118,12,122,0],[158,48,155,58,140,85,162,90,150,100,162,90,150,100,165,68,172,62,165,68,172,62],[152,-8,152,3,152,42,152,71,152,100,152,71,152,100,152,22,153,40,152,22,153,40]],pr:[["r",130,100,45,30]]},
+a2:{p:[[100,18,100,29,98,68,115,97,120,128,78,98,48,95,98,48,98,66,98,48,98,66],[102,42,101,53,95,93,124,100,120,128,80,122,48,95,99,72,99,90,99,72,99,90]],pr:[["r",10,95,40,35]],db:1},
+a3:{p:[[40,82,52,85,100,88,140,90,175,90,140,90,175,90,50,98,42,100,50,98,42,100],[40,82,52,85,100,88,140,90,128,56,140,90,128,56,50,98,42,100,50,98,42,100]],pr:[["r",30,95,130,8]]},
+a4:{p:[[100,39,100,50,100,88,130,88,130,128,130,88,130,128,108,66,106,48,108,66,106,48],[100,39,100,50,100,88,130,88,130,128,130,88,130,128,104,32,102,14,104,32,102,14]],pr:[["r",80,92,40,8],["r",84,40,6,58]],db:1},
+a5:{p:[[100,20,100,31,100,70,92,99,90,128,108,99,110,128,88,50,86,68,112,50,114,68],[100,20,100,31,100,70,92,99,90,128,108,99,110,128,80,35,62,33,120,35,138,33]],db:1,front:1},
+a6:{p:[[100,39,100,50,100,88,130,88,130,128,130,88,130,128,102,20,104,0,102,20,104,0],[100,39,100,50,100,88,130,88,130,128,130,88,130,128,95,64,108,48,95,64,108,48]],pr:[["r",80,92,40,8]],cb:[104,-22]},
+a7:{p:[[98,20,99,31,100,70,100,99,100,128,100,99,100,128,104,52,118,40,104,52,118,40],[98,20,99,31,100,70,100,99,100,128,100,99,100,128,104,52,110,72,104,52,110,72]],cb:[135,-22]},
+a8:{p:[[30,117,42,120,90,121,90,95,115,95,90,95,115,95,45,100,45,85,45,100,45,85],[30,117,42,120,90,121,120,112,150,120,90,95,115,95,45,100,45,85,28,108,12,112]]},
+b1:{p:[[62,40,61,51,60,84,56,106,60,128,74,102,84,116,50,64,44,74,72,64,80,72],[100,10,100,21,100,58,92,82,90,106,110,82,112,106,86,40,80,30,114,40,120,30],[138,40,139,51,140,84,144,106,140,128,126,102,116,116,150,64,156,74,128,64,120,72],[100,10,100,21,100,58,92,82,90,106,110,82,112,106,86,40,80,30,114,40,120,30]],front:1},
+b2:{p:[[50,82,60,88,95,118,125,98,130,128,125,98,130,128,78,104,95,112,78,104,95,112],[50,80,60,88,98,88,128,90,130,128,128,90,130,128,80,80,98,84,80,80,98,84]],pr:[["r",20,90,40,40]],db:1},
+b3:{p:[[91,22,90,33,88,72,112,80,125,95,85,100,80,128,90,52,90,70,90,52,90,70],[125,-10,125,1,125,40,125,68,125,95,132,66,128,92,125,20,125,38,125,20,125,38]],pr:[["r",110,95,45,35]],db:1},
+b4:{p:[[72,39,72,50,70,88,70,128,40,128,70,128,40,128,80,62,74,70,80,62,74,70],[151,90,141,95,106,111,70,128,40,128,70,128,40,128,150,108,158,120,150,108,158,120]],pr:[["r",28,122,16,6]]},
+b5:{p:[[38,86,50,90,100,92,125,100,128,128,125,100,128,128,58,104,60,80,58,104,60,80],[38,86,50,90,100,92,125,100,128,128,125,100,128,128,56,68,57,50,56,68,57,50]],pr:[["r",30,95,110,8]],db:1},
+b6:{p:[[110,66,100,74,62,112,50,118,40,128,50,118,40,128,108,92,112,110,108,92,112,110],[110,66,100,74,62,112,50,118,40,128,50,118,40,128,86,74,98,90,86,74,98,90]],pr:[["l",60,124,112,72]],db:1},
+b7:{p:[[100,20,100,31,100,70,104,99,108,128,96,99,92,128,122,40,140,38,122,40,140,38],[100,20,100,31,100,70,104,99,108,128,96,99,92,128,90,30,106,22,90,30,106,22]],cb:[178,26]},
+b8:{p:[[106,22,104,33,96,70,108,99,112,128,88,99,82,128,112,8,98,22,112,8,98,22],[106,22,104,33,96,70,108,99,112,128,88,99,82,128,114,6,132,-10,114,6,132,-10]],cb:[40,40]},
+b9:{p:[[48,82,60,88,110,90,110,128,140,128,110,128,140,128,60,108,60,128,60,108,60,128],[48,82,60,88,110,90,110,128,140,128,140,92,172,94,60,108,60,128,36,86,14,84]]}};
+function drawSim(svg,id,t){
+  const S=SIM[id];if(!S)return;const n=S.p.length,seg=t%n|0,f=t-Math.floor(t),a=S.p[seg],b=S.p[(seg+1)%n];
+  const e=f<.35?0:f>.85?1:(1-Math.cos((f-.35)/.5*Math.PI))/2;
+  const P=a.map((v,i)=>v+(b[i]-v)*e);
+  const [hx,hy,nx,ny,px,py,k1x,k1y,f1x,f1y,k2x,k2y,f2x,f2y,e1x,e1y,w1x,w1y,e2x,e2y,w2x,w2y]=P;
+  const L=(pts,o)=>`<polyline points="${pts.join(" ")}" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`;
+  const far=S.front?1:.4;
+  let g=`<line x1="0" y1="130" x2="200" y2="130" stroke="var(--line)" stroke-width="3"/>`;
+  (S.pr||[]).forEach(r=>{g+=r[0]==="r"?`<rect x="${r[1]}" y="${r[2]}" width="${r[3]}" height="${r[4]}" rx="3" fill="var(--or2)" stroke="var(--or)" stroke-width="2"/>`:`<line x1="${r[1]}" y1="${r[2]}" x2="${r[3]}" y2="${r[4]}" stroke="var(--or)" stroke-width="8" stroke-linecap="round"/>`});
+  if(S.cb)g+=`<line x1="${S.cb[0]}" y1="${S.cb[1]}" x2="${w1x}" y2="${w1y}" stroke="var(--bl)" stroke-width="2" stroke-dasharray="4 3"/><circle cx="${S.cb[0]}" cy="${S.cb[1]}" r="4" fill="var(--bl)"/>`;
+  g+=L([px,py,k2x,k2y,f2x,f2y],far)+L([nx,ny,e2x,e2y,w2x,w2y],far);
+  g+=L([nx,ny,px,py],1)+L([px,py,k1x,k1y,f1x,f1y],1)+L([nx,ny,e1x,e1y,w1x,w1y],1);
+  g+=`<circle cx="${hx}" cy="${hy}" r="8" fill="var(--ink)"/>`;
+  if(S.db)[[w1x,w1y],[w2x,w2y]].forEach(([x,y])=>{g+=`<rect x="${x-9}" y="${y-4}" width="18" height="8" rx="3" fill="var(--or)"/>`});
+  svg.innerHTML=g;
+}
+const RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let simT=0,simLast=0;
+function simLoop(ts){
+  const open=[...document.querySelectorAll("details[data-sim][open] svg")];
+  if(open.length){const dt=simLast?Math.min(ts-simLast,100):0;simT+=RM?0:dt/1400;open.forEach(s=>drawSim(s,s.parentNode.dataset.sim,RM?Math.floor(ts/1600):simT))}
+  simLast=ts;requestAnimationFrame(simLoop);
+}
+requestAnimationFrame(simLoop);
+const W="日月火水木金土";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const TODAY=ymd(new Date());
+const md=s=>{const d=new Date(s+"T00:00:00");return {m:d.getMonth()+1,d:d.getDate(),w:W[d.getDay()]}};
+let checks=LS.get("sg-checks",{});
+if(checks.day!==TODAY)checks={day:TODAY};
+const saveChecks=()=>LS.set("sg-checks",checks);
+
+
+function exCard(e){
+  const done=checks[e.id]||[];
+  const lamps=Array.from({length:e.s},(_,i)=>`<button class="lamp${done.includes(i)?" done":""}" data-ex="${e.id}" data-i="${i}" aria-pressed="${done.includes(i)}" aria-label="${esc(e.n)} ${i+1}セット目">${i+1}</button>`).join("");
+  return `<div class="card ex"><div class="nm">${esc(e.n)}</div><div class="rx num">${e.s}×${esc(e.r)}</div>
+  <div class="lamps">${lamps}</div>
+  <details data-sim="${e.id}"><summary>動きを見る・ポイント</summary><svg class="sim" viewBox="0 -24 200 160" role="img" aria-label="${esc(e.n)}の動き"></svg><p class="tip">${esc(e.t)}</p></details><div class="row"><a class="yt" href="${yt(e.q||e.n)}" target="_blank" rel="noopener">▶ YouTubeで解説動画を探す</a></div></div>`}
+
+function chkList(arr,key,timer){
+  return arr.map(([id,n,a,b])=>{const on=checks[key+id];const sub=timer?a:(a+(b?"・"+b:""));
+  return `<label class="chk"><input type="checkbox" data-ck="${key+id}" ${on?"checked":""}><div><b>${esc(n)}</b><span>${esc(sub)}</span></div>${timer?"":`<a class="yt" href="${yt(n+" やり方")}" target="_blank" rel="noopener">▶ 動画</a>`}${timer?`<button class="btn" type="button" data-t="30">30秒</button>`:""}</label>`}).join("")}
+
+function renderGym(day){
+  $("segA").classList.toggle("on",day==="A");$("segB").classList.toggle("on",day==="B");
+  $("gymList").innerHTML=(day==="A"?A:B).map(exCard).join("");
+}
+function renderDaily(){
+  $("coreList").innerHTML=chkList(CORE,"core-");
+  $("ankleList").innerHTML=chkList(ANK,"ank-");
+  $("dynList").innerHTML=chkList(DYN,"dyn-");
+  $("stList").innerHTML=chkList(ST,"st-",true);
+}
+function tag(t,m){return t?`<a class="tag ${t==="A"?"tA":"tB"}" href="#gym-${t.toLowerCase()}">${esc(m)}</a>`:`<span class="tag tX">${esc(m)}</span>`}
+function planRow(p){const x=md(p[0]);return `<li class="${p[0]===TODAY?"today":""}"><div class="d num">${x.m}/${x.d}<small>${x.w}曜</small></div><div><div class="m">${esc(p[2])}</div><div class="t">部活：${esc(p[1])}</div></div>${p[3]?tag(p[3],"開く"):""}</li>`}
+function renderPlan(){$("planList").innerHTML=P.map(planRow).join("")}
+function renderToday(){
+  const x=md(TODAY),p=P.find(q=>q[0]===TODAY);
+  $("hdSub").textContent=`${x.m}月${x.d}日（${x.w}）`;
+  let h;
+  if(p&&p[3]){h=`<div class="k num">DAY ${p[3]}</div><p>今日はジムの日：${esc(p[2])}。部活：${esc(p[1])}</p><a class="btn p" href="#gym-${p[3].toLowerCase()}">メニューを開く</a>`}
+  else if(p){h=`<div class="k">${esc(p[2])}</div><p>部活：${esc(p[1])}。ジムはなし。体幹・足首とストレッチは毎日。</p><a class="btn p" href="#daily">体幹・足首を開く</a>`}
+  else{h=`<div class="k">予定なし</div><p>この日の予定はまだ入っていません。1月以降の予定表が出たら追加します。</p><a class="btn p" href="#gym-a">メニューを見る</a>`}
+  $("todayHero").innerHTML=h;
+  const c=[...CORE.map(v=>"core-"+v[0]),...ANK.map(v=>"ank-"+v[0])].filter(k=>checks[k]).length,s=ST.filter(v=>checks["st-"+v[0]]).length;
+  $("todayDaily").innerHTML=`<a class="chk" href="#daily" style="text-decoration:none;color:inherit"><div><b>体幹＋足首</b><span>${c} / ${CORE.length+ANK.length} 完了</span></div><span class="btn" style="margin-left:auto">開く</span></a><a class="chk" href="#daily" style="text-decoration:none;color:inherit"><div><b>寝る前のストレッチ</b><span>${s} / ${ST.length} 完了</span></div><span class="btn" style="margin-left:auto">開く</span></a>`;
+  $("nextList").innerHTML=P.filter(q=>q[3]&&q[0]>=TODAY).slice(0,3).map(planRow).join("")||`<li><div></div><div class="t">12月までの予定は終わりました</div></li>`;
+}
+
+let tmr=null;
+function startTimer(sec){
+  const el=$("timer");clearInterval(tmr);let n=sec;el.textContent=n;el.classList.add("on");
+  tmr=setInterval(()=>{n--;el.textContent=n>0?n:"OK";if(n<=0){clearInterval(tmr);setTimeout(()=>el.classList.remove("on"),1200)}},1000);
+}
+
+function route(){
+  let h=(location.hash||"#today").slice(1);
+  let v=h.startsWith("gym")?"gym":(["today","daily","plan"].includes(h)?h:"today");
+  document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===v));
+  document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
+  const T={today:"今日のメニュー",gym:"ジム",daily:"体幹・足首・ストレッチ",plan:"予定と流れ"};
+  $("hdBig").textContent=v==="gym"?(h==="gym-b"?"Day B お尻・上半身":"Day A 脚・肩"):T[v];
+  if(v==="gym"){renderGym(h==="gym-b"?"B":"A");document.querySelector('nav a[data-v=gym]').href="#"+(h==="gym-b"?"gym-b":"gym-a")}
+  if(v==="today")renderToday();if(v==="daily")renderDaily();if(v==="plan"){renderPlan();const t=document.querySelector(".plan li.today");if(t)t.scrollIntoView({block:"center"})}
+  if(v!=="plan")window.scrollTo(0,0);
+}
+
+document.addEventListener("click",ev=>{
+  const l=ev.target.closest(".lamp");
+  if(l){const id=l.dataset.ex,i=+l.dataset.i;const a=checks[id]||[];checks[id]=a.includes(i)?a.filter(x=>x!==i):[...a,i];saveChecks();l.classList.toggle("done");l.setAttribute("aria-pressed",checks[id].includes(i));return}
+  const t=ev.target.closest("[data-t]");if(t){ev.preventDefault();startTimer(+t.dataset.t);return}
+});
+document.addEventListener("change",ev=>{
+  const c=ev.target.closest("[data-ck]");if(c){checks[c.dataset.ck]=c.checked;saveChecks()}
+});
+window.addEventListener("hashchange",route);
+route();
+}
+</script>
+</body>
+</html>
