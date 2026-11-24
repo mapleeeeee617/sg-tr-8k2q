@@ -48,7 +48,7 @@ details{grid-column:1/-1}.sim{width:100%;max-width:380px;height:auto;display:blo
 .tip{font-size:14px;color:var(--mute);margin:4px 0 0}
 .last{grid-column:1/-1;font-size:14px;color:var(--bl);font-weight:700}
 .seg{display:flex;gap:8px;margin:8px 0}.seg .btn{flex:1;justify-content:center}.seg .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.chk label{display:block;color:var(--ink);font-size:16px}
 .chk:last-child{border:0}.chk input{width:24px;height:24px;margin-top:3px;accent-color:var(--bl);flex:none}
 .chk b{display:block}.chk span{font-size:14px;color:var(--mute)}
 .chk .btn{margin-left:auto;flex:none}
@@ -70,7 +70,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px soli
 .log .x{background:none;border:0;color:var(--mute);font-size:13px;cursor:pointer;justify-self:end;grid-column:2;min-height:32px}
 .note{font-size:13px;color:var(--mute)}
 .timer{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--board);color:#fff;border-radius:99px;padding:8px 18px;font-size:30px;display:none;z-index:5;box-shadow:0 6px 20px #0004}
-.timer.on{display:block}
+.timer.on{display:block}.timer{text-align:center;cursor:pointer;min-width:170px;line-height:1.1}.timer small{display:block;font:700 12px "Zen Kaku Gothic New";opacity:.8;margin:2px 0}.timer.rest{background:var(--bl)}.acts{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.tb{min-height:40px;padding:6px 10px;font-size:14px;white-space:nowrap}
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom);z-index:4}
 nav a{min-height:60px;display:grid;place-items:center;text-decoration:none;color:var(--mute);font-size:13px;font-weight:700;border-top:3px solid transparent}
 nav a svg{width:22px;height:22px;display:block;margin:0 auto 2px}
@@ -112,7 +112,7 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
   <h2>動的ストレッチ（練習・ジムの前）</h2>
   <div class="card" id="dynList"></div>
   <h2>静的ストレッチ（練習後・寝る前）</h2>
-  <p class="note">「30秒」を押すとタイマーが動きます。各部位2回ずつ。</p>
+  <p class="note">「⏱」を押すとタイマーが動き、終わると自動でチェックが付きます。音が鳴るのでマナーモードを解除してください。</p>
   <div class="card" id="stList"></div>
   <div class="warn">座って前屈するストレッチと上体起こし・クランチはやらない。脚にしびれが走ったら、その姿勢はすぐやめる。</div>
 </section>
@@ -157,7 +157,7 @@ const B=[
  {id:"b7",n:"リアレイズ／フェイスプル",s:3,r:"15回",t:"肩の後ろ。シュートの肩を安定させる。"},
  {id:"b8",n:"ケーブルオーバーヘッドエクステンション",s:3,r:"12回",t:"三頭筋。限界まで追い込んでOK。"},
  {id:"b9",n:"バードドッグ＋パロフプレス",s:3,r:"8回＋10回",t:"体幹をひねられないように固める。"}];
-const CORE=[["c1","マッギル式カールアップ","10秒×5回","片膝を立て、両手を腰の下に。頭と肩だけ少し浮かせる"],["c2","サイドプランク","左右20〜30秒×3回","体を一直線に"],["c3","バードドッグ","左右10秒キープ×5回","腰を反らさない"],["c4","デッドバグ","8回×2セット","腰を床につけたまま"]];
+const CORE=[["c1","マッギル式カールアップ","10秒×5回","片膝を立て、反対の脚は伸ばす（途中で左右交代）。両手を腰の下に入れ、頭と肩だけ少し浮かせる"],["c2","サイドプランク","左右20〜30秒×3回","体を一直線に"],["c3","バードドッグ","左右10秒キープ×5回","腰を反らさない"],["c4","デッドバグ","8回×2セット","腰を床につけたまま"]];
 const ANK=[["k1","片脚立ち","左右30秒×2回","慣れたら目を閉じる。タオルの上で"],["k2","片脚立ち＋ボールキャッチ","左右20回","壁とボールをやり取り"],["k3","片脚ホップで着地を止める","前・横 左右5回","着地後2秒静止。膝を内側に入れない"],["k4","片脚カーフレイズ","左右15回×2","段差でかかとを深く下ろす"],["k5","壁に膝を寄せる足首ストレッチ","左右30秒×2回","かかとを浮かせない"]];
 const DYN=[["d1","レッグスイング","前後・左右 各10回",""],["d2","ランジ＋上体ひねり","左右5回",""],["d3","腕回し","前後10回",""]];
 const ST=[["s1","股関節の前側","片膝立ち。腰は反らさない"],["s2","お尻","仰向けで足を4の字に組む"],["s3","もも裏","仰向けで、タオルを足にかけて脚を上げる"],["s4","ふくらはぎ・足首","壁に向かって膝を前に出す"],["s5","胸・背中の横","ドア枠、または広背筋のストレッチ"],["s6","胸の背骨","横向きに寝て上の腕を開く"]];
@@ -212,6 +212,8 @@ function simLoop(ts){
   simLast=ts;requestAnimationFrame(simLoop);
 }
 requestAnimationFrame(simLoop);
+const TSPEC={"core-c1":[10,5,5,"10秒×5"],"core-c2":[25,3,10,"25秒×3"],"core-c3":[10,5,5,"10秒×5"],"ank-k1":[30,2,5,"30秒×2"],"ank-k5":[30,2,5,"30秒×2"]};
+ST.forEach(v=>TSPEC["st-"+v[0]]=[30,2,5,"30秒×2"]);
 const W="日月火水木金土";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -230,11 +232,11 @@ function exCard(e){
   const lamps=Array.from({length:e.s},(_,i)=>`<button class="lamp${done.includes(i)?" done":""}" data-ex="${e.id}" data-i="${i}" aria-pressed="${done.includes(i)}" aria-label="${esc(e.n)} ${i+1}セット目">${i+1}</button>`).join("");
   return `<div class="card ex"><div class="nm">${esc(e.n)}</div><div class="rx num">${e.s}×${esc(e.r)}</div>
   <div class="lamps">${lamps}</div>
-  <details data-sim="${e.id}"><summary>動きを見る・ポイント</summary><svg class="sim" viewBox="0 -24 200 160" role="img" aria-label="${esc(e.n)}の動き"></svg><p class="tip">${esc(e.t)}</p></details><div class="row"><a class="yt" href="${yt(e.q||e.n)}" target="_blank" rel="noopener">▶ YouTubeで解説動画を探す</a></div></div>`}
+  <details data-sim="${e.id}"><summary>動きを見る・ポイント</summary><svg class="sim" viewBox="0 -24 200 160" role="img" aria-label="${esc(e.n)}の動き"></svg><p class="tip">${esc(e.t)}</p></details><div class="row"><button class="btn tb" type="button" data-rest="${e.id==="a1"||e.id==="b1"?60:90}">⏱ 休憩${e.id==="a1"||e.id==="b1"?60:90}秒</button><a class="yt" href="${yt(e.q||e.n)}" target="_blank" rel="noopener">▶ YouTubeで解説動画を探す</a></div></div>`}
 
 function chkList(arr,key,timer){
-  return arr.map(([id,n,a,b])=>{const on=checks[key+id];const sub=timer?a:(a+(b?"・"+b:""));
-  return `<label class="chk"><input type="checkbox" data-ck="${key+id}" ${on?"checked":""}><div><b>${esc(n)}</b><span>${esc(sub)}</span></div>${timer?"":`<a class="yt" href="${yt(n+" やり方")}" target="_blank" rel="noopener">▶ 動画</a>`}${timer?`<button class="btn" type="button" data-t="30">30秒</button>`:""}</label>`}).join("")}
+  return arr.map(([id,n,a,b])=>{const on=checks[key+id];const sub=timer?a:(a+(b?"・"+b:""));const sp=TSPEC[key+id];
+  return `<div class="chk"><input type="checkbox" id="ck-${key+id}" data-ck="${key+id}" ${on?"checked":""}><label for="ck-${key+id}" style="flex:1;cursor:pointer"><b>${esc(n)}</b><span>${esc(sub)}</span></label><div class="acts">${sp?`<button class="btn tb" type="button" data-tk="${key+id}">⏱ ${sp[3]}</button>`:""}<a class="yt" href="${yt(n+" やり方")}" target="_blank" rel="noopener">▶ 動画</a></div></div>`}).join("")}
 
 function renderGym(day){
   $("segA").classList.toggle("on",day==="A");$("segB").classList.toggle("on",day==="B");
@@ -262,10 +264,24 @@ function renderToday(){
   $("nextList").innerHTML=P.filter(q=>q[3]&&q[0]>=TODAY).slice(0,3).map(planRow).join("")||`<li><div></div><div class="t">12月までの予定は終わりました</div></li>`;
 }
 
-let tmr=null;
-function startTimer(sec){
-  const el=$("timer");clearInterval(tmr);let n=sec;el.textContent=n;el.classList.add("on");
-  tmr=setInterval(()=>{n--;el.textContent=n>0?n:"OK";if(n<=0){clearInterval(tmr);setTimeout(()=>el.classList.remove("on"),1200)}},1000);
+let tmr=null,actx=null;
+function beep(f,d){try{if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.connect(g);g.connect(actx.destination);g.gain.setValueAtTime(.25,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+function stopTimer(){clearInterval(tmr);tmr=null;$("timer").classList.remove("on")}
+function startTimer(sec,reps,rest,ck,label){
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume()}catch(e){}
+  const el=$("timer");clearInterval(tmr);reps=reps||1;rest=rest||0;
+  let set=1,phase="work",n=sec;
+  const show=()=>{el.innerHTML=`<small>${esc(label||"")}${reps>1?` ${set}/${reps}`:""}${phase==="rest"?" 休憩":""}</small>${n}<small>タップで停止</small>`;el.classList.toggle("rest",phase==="rest")};
+  el.classList.add("on");show();beep(880,.15);
+  tmr=setInterval(()=>{n--;if(n>0&&n<=3)beep(660,.08);
+    if(n<=0){
+      if(phase==="work"&&set<reps&&rest>0){phase="rest";n=rest;beep(1040,.3)}
+      else if(phase==="work"&&set<reps){set++;n=sec;beep(1040,.3)}
+      else if(phase==="rest"){phase="work";set++;n=sec;beep(880,.2)}
+      else{clearInterval(tmr);tmr=null;beep(1320,.5);el.innerHTML="<small>"+esc(label||"")+"</small>完了！";
+        if(ck){checks[ck]=true;saveChecks();const c=document.querySelector(`[data-ck="${ck}"]`);if(c)c.checked=true}
+        setTimeout(()=>el.classList.remove("on"),1800);return}
+    }show()},1000);
 }
 
 function route(){
@@ -283,7 +299,9 @@ function route(){
 document.addEventListener("click",ev=>{
   const l=ev.target.closest(".lamp");
   if(l){const id=l.dataset.ex,i=+l.dataset.i;const a=checks[id]||[];checks[id]=a.includes(i)?a.filter(x=>x!==i):[...a,i];saveChecks();l.classList.toggle("done");l.setAttribute("aria-pressed",checks[id].includes(i));return}
-  const t=ev.target.closest("[data-t]");if(t){ev.preventDefault();startTimer(+t.dataset.t);return}
+  const tk=ev.target.closest("[data-tk]");if(tk){ev.preventDefault();const sp=TSPEC[tk.dataset.tk];const nm=tk.closest(".chk").querySelector("b").textContent;startTimer(sp[0],sp[1],sp[2],tk.dataset.tk,nm);return}
+  const rt=ev.target.closest("[data-rest]");if(rt){startTimer(+rt.dataset.rest,1,0,null,"セット間の休憩");return}
+  if(ev.target.closest("#timer")){stopTimer();return}
 });
 document.addEventListener("change",ev=>{
   const c=ev.target.closest("[data-ck]");if(c){checks[c.dataset.ck]=c.checked;saveChecks()}
