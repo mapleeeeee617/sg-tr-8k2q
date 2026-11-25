@@ -47,7 +47,7 @@ button,.btn,select,input,textarea{font:inherit;font-size:16px}
 details{grid-column:1/-1}.sim{width:100%;max-width:380px;height:auto;display:block;margin:8px auto 4px;background:var(--bg);border:1px solid var(--line);border-radius:12px}.yt{color:var(--or);font-weight:700;font-size:14px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;min-height:36px}.chk .yt{margin-left:auto;flex:none}summary{cursor:pointer;color:var(--mute);font-size:14px;min-height:32px}
 .tip{font-size:14px;color:var(--mute);margin:4px 0 0}
 .last{grid-column:1/-1;font-size:14px;color:var(--bl);font-weight:700}
-.seg{display:flex;gap:8px;margin:8px 0}.seg .btn{flex:1;justify-content:center}.seg .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:flex;gap:6px;margin:8px 0}.seg .btn{padding:8px 8px;font-size:14px}.seg .btn{flex:1;justify-content:center}.seg .btn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.chk label{display:block;color:var(--ink);font-size:16px}
 .chk:last-child{border:0}.chk input{width:24px;height:24px;margin-top:3px;accent-color:var(--bl);flex:none}
 .chk b{display:block}.chk span{font-size:14px;color:var(--mute)}
@@ -59,7 +59,7 @@ details{grid-column:1/-1}.sim{width:100%;max-width:380px;height:auto;display:blo
 .plan .t{font-size:14px;color:var(--mute)}.plan .m{font-weight:700}
 .plan li.today{background:var(--bl2);border-radius:10px}
 .tag{font-size:13px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;text-decoration:none}
-.tA{background:var(--or);color:#fff}.tB{background:var(--bl);color:#fff}.tX{background:var(--line);color:var(--ink)}
+.tC{background:#2a9d6f;color:#fff}.tA{background:var(--or);color:#fff}.tB{background:var(--bl);color:#fff}.tX{background:var(--line);color:var(--ink)}
 form.card{display:grid;gap:10px}
 label{font-size:14px;color:var(--mute);display:grid;gap:4px}
 input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
@@ -97,7 +97,8 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
 </section>
 
 <section id="gym">
-  <div class="seg"><a class="btn" id="segA" href="#gym-a">Day A 脚・肩</a><a class="btn" id="segB" href="#gym-b">Day B お尻・上半身</a></div>
+  <div class="seg"><a class="btn" id="segA" href="#gym-a">Day A 脚・肩</a><a class="btn" id="segB" href="#gym-b">Day B お尻・上半身</a><a class="btn" id="segC" href="#gym-c">Day C 上半身</a></div>
+  <p class="note" id="cNote" hidden>Day Cは、練習が早く終わる日の追加メニュー。脚は使わないので、翌日の練習や試合に響かない。30〜40分で終わらせる。</p>
   <p class="note">丸をタップするとセット完了。重さと回数は筋トレMEMOに記録する。メインの種目は「あと1〜3回できる」ところで止める。</p>
   <div id="gymList"></div>
   <div class="card" id="hiit"><b>バイクHIIT（予定にある日だけ）</b><p class="tip">30秒全力＋30秒休憩を8〜10本。予定に「＋バイクHIIT」とある日に、最後に行う。</p></div>
@@ -119,7 +120,7 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
 
 <section id="plan">
   <h2>11〜12月の予定</h2>
-  <p class="note">ジムの日をタップするとそのメニューへ。練習が2時間あった日は、ジムに行かなくてもOK。</p>
+  <p class="note">ジムの日をタップするとそのメニューへ。練習が早く終わり、チームWTがない日は、上半身だけのDay Cを追加。</p>
   <ul class="plan" id="planList"></ul>
   <h2>5月までの流れ</h2>
   <div class="card"><b>12〜2月：基礎づくり</b><p class="tip">このメニューを重さ重視で。最初の1か月はフォームを固める。</p></div>
@@ -162,13 +163,15 @@ const ANK=[["k1","片脚立ち","左右30秒×2回","慣れたら目を閉じる
 const DYN=[["d1","レッグスイング","前後・左右 各10回",""],["d2","ランジ＋上体ひねり","左右5回",""],["d3","腕回し","前後10回",""]];
 const ST=[["s1","股関節の前側","片膝立ち。腰は反らさない"],["s2","お尻","仰向けで足を4の字に組む"],["s3","もも裏","仰向けで、タオルを足にかけて脚を上げる"],["s4","ふくらはぎ・足首","壁に向かって膝を前に出す"],["s5","胸・背中の横","ドア枠、または広背筋のストレッチ"],["s6","胸の背骨","横向きに寝て上の腕を開く"]];
 const P=[
-["2026-11-24","練習 17:15","体幹・ストレッチ",""],["2026-11-25","練習 8:30","体幹・ストレッチ",""],["2026-11-26","free","Day A","A"],["2026-11-27","練習 18:00","体幹・ストレッチ",""],["2026-11-28","WT／練習 18:00","チームのWTのみ",""],["2026-11-29","試合 14:00","試合",""],["2026-11-30","free","Day B","B"],
-["2026-12-01","練習 17:15","体幹・ストレッチ",""],["2026-12-02","練習 19:00","体幹・ストレッチ",""],["2026-12-03","練習 19:30","体幹・ストレッチ",""],["2026-12-04","free","Day B＋バイクHIIT","B"],["2026-12-05","練習 10:00","体幹・ストレッチ",""],["2026-12-06","紅白戦 17:00","紅白戦",""],["2026-12-07","free","Day A","A"],["2026-12-08","全体MTG 18:15","体幹・ストレッチ",""],
+["2026-11-24","練習 17:15","体幹・ストレッチ",""],["2026-11-25","練習 8:30","Day C（上半身）","C"],["2026-11-26","free","Day A","A"],["2026-11-27","練習 18:00","体幹・ストレッチ",""],["2026-11-28","WT／練習 18:00","チームのWTのみ",""],["2026-11-29","試合 14:00","試合",""],["2026-11-30","free","Day B","B"],
+["2026-12-01","練習 17:15","練習後に Day C（上半身）","C"],["2026-12-02","練習 19:00","体幹・ストレッチ",""],["2026-12-03","練習 19:30","体幹・ストレッチ",""],["2026-12-04","free","Day B＋バイクHIIT","B"],["2026-12-05","練習 10:00","練習後に Day C（上半身）","C"],["2026-12-06","紅白戦 17:00","紅白戦",""],["2026-12-07","free","Day A","A"],["2026-12-08","全体MTG 18:15","体幹・ストレッチ",""],
 ["2026-12-09","free","Day B","B"],["2026-12-10","free","シュート練",""],["2026-12-11","free","Day A","A"],["2026-12-12","free","休み",""],["2026-12-13","free","Day B＋バイクHIIT","B"],["2026-12-14","大掃除 18:15","シュート練",""],["2026-12-15","free","Day A","A"],["2026-12-16","free","シュート練",""],["2026-12-17","free","Day B＋バイクHIIT","B"],["2026-12-18","free","シュート練",""],["2026-12-19","free","休み（翌日部内戦）",""],["2026-12-20","部内戦 15:00","部内戦",""],["2026-12-21","free","休み",""],["2026-12-22","free","Day A","A"],["2026-12-23","free","シュート練",""],["2026-12-24","free","Day B＋バイクHIIT","B"],["2026-12-25","冬季休業","シュート練",""],["2026-12-26","free","休み",""],["2026-12-27","free","Day A","A"],["2026-12-28","free","シュート練",""],["2026-12-29","free","Day B＋バイクHIIT","B"],["2026-12-30","free","休み",""]];
 
 const yt=q=>"https://www.youtube.com/results?search_query="+encodeURIComponent(q);
 const Q={a1:"ボックスジャンプ やり方",a2:"ブルガリアンスクワット ダンベル やり方",a3:"ライイングレッグカール やり方",a4:"シーテッド ダンベルショルダープレス やり方",a5:"サイドレイズ ダンベル やり方",a6:"ラットプルダウン やり方",a7:"ケーブル プッシュダウン やり方",a8:"デッドバグ サイドプランク やり方",b1:"ラテラルバウンド やり方",b2:"ヒップスラスト やり方",b3:"ダンベル ステップアップ やり方",b4:"ノルディックハムストリング やり方",b5:"ダンベルベンチプレス やり方",b6:"チェストサポーテッドロウ やり方",b7:"フェイスプル やり方",b8:"ケーブル オーバーヘッドエクステンション やり方",b9:"バードドッグ パロフプレス やり方"};
 [...A,...B].forEach(e=>e.q=Q[e.id]);
+const pick=(arr,id,s,r)=>{const e=arr.find(x=>x.id===id);return {...e,id:"c"+id,sim:id,s:s??e.s,r:r??e.r}};
+const C=[pick(A,"a4"),pick(A,"a5",3),pick(A,"a6"),pick(B,"b5"),pick(B,"b6"),pick(B,"b7"),pick(A,"a7"),pick(B,"b8")];
 const ST0=x=>[x,20,x,31,x,70,x,99,x,128,x,99,x,128,x,50,x+1,68,x,50,x+1,68];
 const SIM={
 a1:{p:[ST0(70),[80,45,78,55,62,88,85,100,72,128,85,100,72,128,68,70,55,78,68,70,55,78],[115,12,113,23,108,60,125,70,120,92,125,70,120,92,118,12,122,0,118,12,122,0],[158,48,155,58,140,85,162,90,150,100,162,90,150,100,165,68,172,62,165,68,172,62],[152,-8,152,3,152,42,152,71,152,100,152,71,152,100,152,22,153,40,152,22,153,40]],pr:[["r",130,100,45,30]]},
@@ -232,15 +235,15 @@ function exCard(e){
   const lamps=Array.from({length:e.s},(_,i)=>`<button class="lamp${done.includes(i)?" done":""}" data-ex="${e.id}" data-i="${i}" aria-pressed="${done.includes(i)}" aria-label="${esc(e.n)} ${i+1}セット目">${i+1}</button>`).join("");
   return `<div class="card ex"><div class="nm">${esc(e.n)}</div><div class="rx num">${e.s}×${esc(e.r)}</div>
   <div class="lamps">${lamps}</div>
-  <details data-sim="${e.id}"><summary>動きを見る・ポイント</summary><svg class="sim" viewBox="0 -24 200 160" role="img" aria-label="${esc(e.n)}の動き"></svg><p class="tip">${esc(e.t)}</p></details><div class="row"><button class="btn tb" type="button" data-rest="${e.id==="a1"||e.id==="b1"?60:90}">⏱ 休憩${e.id==="a1"||e.id==="b1"?60:90}秒</button><a class="yt" href="${yt(e.q||e.n)}" target="_blank" rel="noopener">▶ YouTubeで解説動画を探す</a></div></div>`}
+  <details data-sim="${e.sim||e.id}"><summary>動きを見る・ポイント</summary><svg class="sim" viewBox="0 -24 200 160" role="img" aria-label="${esc(e.n)}の動き"></svg><p class="tip">${esc(e.t)}</p></details><div class="row"><button class="btn tb" type="button" data-rest="${e.id==="a1"||e.id==="b1"?60:90}">⏱ 休憩${e.id==="a1"||e.id==="b1"?60:90}秒</button><a class="yt" href="${yt(e.q||e.n)}" target="_blank" rel="noopener">▶ YouTubeで解説動画を探す</a></div></div>`}
 
 function chkList(arr,key,timer){
   return arr.map(([id,n,a,b])=>{const on=checks[key+id];const sub=timer?a:(a+(b?"・"+b:""));const sp=TSPEC[key+id];
   return `<div class="chk"><input type="checkbox" id="ck-${key+id}" data-ck="${key+id}" ${on?"checked":""}><label for="ck-${key+id}" style="flex:1;cursor:pointer"><b>${esc(n)}</b><span>${esc(sub)}</span></label><div class="acts">${sp?`<button class="btn tb" type="button" data-tk="${key+id}">⏱ ${sp[3]}</button>`:""}<a class="yt" href="${yt(n+" やり方")}" target="_blank" rel="noopener">▶ 動画</a></div></div>`}).join("")}
 
 function renderGym(day){
-  $("segA").classList.toggle("on",day==="A");$("segB").classList.toggle("on",day==="B");
-  $("gymList").innerHTML=(day==="A"?A:B).map(exCard).join("");
+  $("segA").classList.toggle("on",day==="A");$("segB").classList.toggle("on",day==="B");$("segC").classList.toggle("on",day==="C");$("cNote").hidden=day!=="C";
+  $("gymList").innerHTML=(day==="A"?A:day==="B"?B:C).map(exCard).join("");
 }
 function renderDaily(){
   $("coreList").innerHTML=chkList(CORE,"core-");
@@ -248,7 +251,7 @@ function renderDaily(){
   $("dynList").innerHTML=chkList(DYN,"dyn-");
   $("stList").innerHTML=chkList(ST,"st-",true);
 }
-function tag(t,m){return t?`<a class="tag ${t==="A"?"tA":"tB"}" href="#gym-${t.toLowerCase()}">${esc(m)}</a>`:`<span class="tag tX">${esc(m)}</span>`}
+function tag(t,m){return t?`<a class="tag ${t==="A"?"tA":t==="B"?"tB":"tC"}" href="#gym-${t.toLowerCase()}">${esc(m)}</a>`:`<span class="tag tX">${esc(m)}</span>`}
 function planRow(p){const x=md(p[0]);return `<li class="${p[0]===TODAY?"today":""}"><div class="d num">${x.m}/${x.d}<small>${x.w}曜</small></div><div><div class="m">${esc(p[2])}</div><div class="t">部活：${esc(p[1])}</div></div>${p[3]?tag(p[3],"開く"):""}</li>`}
 function renderPlan(){$("planList").innerHTML=P.map(planRow).join("")}
 function renderToday(){
@@ -290,8 +293,9 @@ function route(){
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===v));
   document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
   const T={today:"今日のメニュー",gym:"ジム",daily:"体幹・足首・ストレッチ",plan:"予定と流れ"};
-  $("hdBig").textContent=v==="gym"?(h==="gym-b"?"Day B お尻・上半身":"Day A 脚・肩"):T[v];
-  if(v==="gym"){renderGym(h==="gym-b"?"B":"A");document.querySelector('nav a[data-v=gym]').href="#"+(h==="gym-b"?"gym-b":"gym-a")}
+  const GD=h==="gym-b"?"B":h==="gym-c"?"C":"A";
+  $("hdBig").textContent=v==="gym"?{A:"Day A 脚・肩",B:"Day B お尻・上半身",C:"Day C 上半身"}[GD]:T[v];
+  if(v==="gym"){renderGym(GD);document.querySelector('nav a[data-v=gym]').href="#gym-"+GD.toLowerCase()}
   if(v==="today")renderToday();if(v==="daily")renderDaily();if(v==="plan"){renderPlan();const t=document.querySelector(".plan li.today");if(t)t.scrollIntoView({block:"center"})}
   if(v!=="plan")window.scrollTo(0,0);
 }
