@@ -71,7 +71,7 @@ input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px soli
 .note{font-size:13px;color:var(--mute)}
 .timer{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--board);color:#fff;border-radius:99px;padding:8px 18px;font-size:30px;display:none;z-index:5;box-shadow:0 6px 20px #0004}
 .timer.on{display:block}.timer{text-align:center;cursor:pointer;min-width:170px;line-height:1.1}.timer small{display:block;font:700 12px "Zen Kaku Gothic New";opacity:.8;margin:2px 0}.timer.rest{background:var(--bl)}.acts{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.tb{min-height:40px;padding:6px 10px;font-size:14px;white-space:nowrap}
-nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom);z-index:4}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding-bottom:env(safe-area-inset-bottom);z-index:4}
 nav a{min-height:60px;display:grid;place-items:center;text-decoration:none;color:var(--mute);font-size:13px;font-weight:700;border-top:3px solid transparent}
 nav a svg{width:22px;height:22px;display:block;margin:0 auto 2px}
 nav a.on{color:var(--or);border-top-color:var(--or)}
@@ -129,6 +129,56 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
   <div class="warn">デッドリフト・バーベルスクワット・立ってのプレスはやらない。脚に力が入りにくい、尿や便が出にくいなどの症状が出たらすぐ受診。始める前に整形外科か理学療法士に一度確認を。</div>
 </section>
 
+<section id="food">
+  <h2>1日の目標</h2>
+  <div class="card hero"><div class="k num">P 120g</div><p>タンパク質は体重×1.6g＝1日120g前後。練習・ジムの日はご飯もしっかり。体重は+1〜2kgまで。費用の目安は1日1,000円前後（月3万円ほど）。</p></div>
+  <p class="note">練習やジムが終わってから2時間以内に、タンパク質20〜40g＋ご飯などの炭水化物をとる。</p>
+
+  <h2>1日の例（約1,000円・P約120g）</h2>
+  <ul class="plan card">
+    <li><div class="d num">朝</div><div><div class="m">納豆卵ごはん＋牛乳</div><div class="t">ご飯1合・納豆1・卵2・牛乳200ml</div></div><span class="tag tX">約240円・P30g</span></li>
+    <li><div class="d num">昼</div><div><div class="m">鶏ハム丼 or 学食</div><div class="t">作り置きの鶏ハム100g＋ご飯</div></div><span class="tag tX">約200円・P30g</span></li>
+    <li><div class="d num">間食</div><div><div class="m">ギリシャヨーグルト＋バナナ</div><div class="t">練習前のエネルギー補給に</div></div><span class="tag tX">約180円・P10g</span></li>
+    <li><div class="d num">夜</div><div><div class="m">鶏むね親子丼＋味噌汁</div><div class="t">練習・ジムの後に</div></div><span class="tag tX">約350円・P45g</span></li>
+  </ul>
+
+  <h2>作れるメニュー</h2>
+  <div class="card ex"><div class="nm">しっとり鶏ハム（作り置き）</div><div class="rx num">100円/食</div>
+    <p class="tip" style="grid-column:1/-1">鶏むね肉（皮なし）300g・塩小さじ1・砂糖小さじ2。むね肉に塩と砂糖をすり込み、ラップで包んで一晩置く。沸騰したお湯に入れて火を止め、フタをして1時間放置。3食分。冷蔵で3〜4日。<br>1食100gでタンパク質約23g。</p>
+    <div class="row"><a class="yt" href="https://www.youtube.com/results?search_query=%E9%B6%8F%E3%83%8F%E3%83%A0+%E6%94%BE%E7%BD%AE+%E4%BD%9C%E3%82%8A%E6%96%B9" target="_blank" rel="noopener">▶ 動画で見る</a></div></div>
+  <div class="card ex"><div class="nm">鶏むね親子丼</div><div class="rx num">約350円</div>
+    <p class="tip" style="grid-column:1/-1">鶏むね150g・卵2個・玉ねぎ1/2・ご飯1合・めんつゆ。むね肉はそぎ切りにして片栗粉をまぶすと固くならない。玉ねぎと肉をめんつゆで煮て、溶き卵でとじる。<br>タンパク質約45g。</p>
+    <div class="row"><a class="yt" href="https://www.youtube.com/results?search_query=%E9%B6%8F%E3%82%80%E3%81%AD+%E8%A6%AA%E5%AD%90%E4%B8%BC+%E7%B0%A1%E5%8D%98" target="_blank" rel="noopener">▶ 動画で見る</a></div></div>
+  <div class="card ex"><div class="nm">豚こまの生姜焼き＋キャベツ</div><div class="rx num">約380円</div>
+    <p class="tip" style="grid-column:1/-1">豚こま150g・玉ねぎ1/4・キャベツ1/8・ご飯1合・しょうゆ／みりん／チューブ生姜。フライパン1つで10分。<br>タンパク質約35g。</p>
+    <div class="row"><a class="yt" href="https://www.youtube.com/results?search_query=%E8%B1%9A%E3%81%93%E3%81%BE+%E7%94%9F%E5%A7%9C%E7%84%BC%E3%81%8D+%E7%B0%A1%E5%8D%98" target="_blank" rel="noopener">▶ 動画で見る</a></div></div>
+  <div class="card ex"><div class="nm">サバ缶と豆腐の味噌汁定食</div><div class="rx num">約330円</div>
+    <p class="tip" style="grid-column:1/-1">サバ水煮缶1缶・豆腐1/2丁・ご飯1合・味噌・ネギ。サバ缶はそのまま、または味噌汁に入れる。疲れて料理したくない日に。<br>タンパク質約40g。</p>
+    <div class="row"><a class="yt" href="https://www.youtube.com/results?search_query=%E3%82%B5%E3%83%90%E7%BC%B6+%E5%91%B3%E5%99%8C%E6%B1%81+%E7%B0%A1%E5%8D%98" target="_blank" rel="noopener">▶ 動画で見る</a></div></div>
+  <div class="card ex"><div class="nm">鶏もも豆腐鍋（2回分）</div><div class="rx num">約300円/食</div>
+    <p class="tip" style="grid-column:1/-1">鶏もも300g・豆腐1丁・白菜1/4・きのこ・鍋つゆ。2日に分けて食べる。2日目はご飯と卵を入れて雑炊に。<br>1食あたりタンパク質約35g。</p>
+    <div class="row"><a class="yt" href="https://www.youtube.com/results?search_query=%E9%B6%8F%E3%82%82%E3%82%82+%E8%B1%86%E8%85%90+%E9%8D%8B+%E4%B8%80%E4%BA%BA%E6%9A%AE%E3%82%89%E3%81%97" target="_blank" rel="noopener">▶ 動画で見る</a></div></div>
+
+  <h2>週1回の買い物リスト</h2>
+  <div class="card">
+    <table style="width:100%;border-collapse:collapse;font-size:15px">
+      <tbody>
+        <tr><td>鶏むね肉 1kg</td><td style="text-align:right;white-space:nowrap">約1,000円</td></tr>
+        <tr><td>卵 10個入り×2</td><td style="text-align:right;white-space:nowrap">約620円</td></tr>
+        <tr><td>豚こま 300g</td><td style="text-align:right;white-space:nowrap">約450円</td></tr>
+        <tr><td>納豆 3パック×2</td><td style="text-align:right;white-space:nowrap">約200円</td></tr>
+        <tr><td>牛乳 1L×2</td><td style="text-align:right;white-space:nowrap">約500円</td></tr>
+        <tr><td>サバ水煮缶×2</td><td style="text-align:right;white-space:nowrap">約400円</td></tr>
+        <tr><td>豆腐×2・ギリシャヨーグルト×4</td><td style="text-align:right;white-space:nowrap">約800円</td></tr>
+        <tr><td>バナナ・玉ねぎ・キャベツ・ネギなど</td><td style="text-align:right;white-space:nowrap">約700円</td></tr>
+        <tr><td>米（5kgを月1〜2袋）の週割り</td><td style="text-align:right;white-space:nowrap">約1,000円</td></tr>
+        <tr style="font-weight:700;border-top:2px solid var(--line)"><td>合計（1週間）</td><td style="text-align:right;white-space:nowrap">約5,700円</td></tr>
+      </tbody>
+    </table>
+    <p class="tip">学食や外食の分は別。業務スーパーや特売を使うと、鶏むね肉はもっと安くなる。</p>
+  </div>
+  <p class="note">価格は2026年11月時点のスーパーの目安（卵10個約311円、鶏もも100g約156円、米5kg約3,000円前後として計算）。店や時期で変わります。タンパク質の量もおおよその値です。</p>
+</section>
 </main>
 <div class="timer num" id="timer" role="status"></div>
 <nav aria-label="メニュー">
@@ -136,6 +186,7 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
   <a href="#gym-a" data-v="gym"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12"/></svg>ジム</a>
   <a href="#daily" data-v="daily"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M12 7v7l-4 6M12 14l4 6M6 10h12"/></svg>体幹・足首</a>
   <a href="#plan" data-v="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>予定</a>
+  <a href="#food" data-v="food"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11h16a8 8 0 0 1-16 0zM8 7c0-2 2-2 2-4M13 7c0-2 2-2 2-4"/></svg>ごはん</a>
 </nav>
 <script>
 {
@@ -289,10 +340,10 @@ function startTimer(sec,reps,rest,ck,label){
 
 function route(){
   let h=(location.hash||"#today").slice(1);
-  let v=h.startsWith("gym")?"gym":(["today","daily","plan"].includes(h)?h:"today");
+  let v=h.startsWith("gym")?"gym":(["today","daily","plan","food"].includes(h)?h:"today");
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===v));
   document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
-  const T={today:"今日のメニュー",gym:"ジム",daily:"体幹・足首・ストレッチ",plan:"予定と流れ"};
+  const T={today:"今日のメニュー",gym:"ジム",daily:"体幹・足首・ストレッチ",plan:"予定と流れ",food:"筋肉をつける食事"};
   const GD=h==="gym-b"?"B":h==="gym-c"?"C":"A";
   $("hdBig").textContent=v==="gym"?{A:"Day A 脚・肩",B:"Day B お尻・上半身",C:"Day C 上半身"}[GD]:T[v];
   if(v==="gym"){renderGym(GD);document.querySelector('nav a[data-v=gym]').href="#gym-"+GD.toLowerCase()}
