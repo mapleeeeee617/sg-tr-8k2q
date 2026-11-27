@@ -90,6 +90,8 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
 <main>
 <section id="today">
   <div class="card hero" id="todayHero"></div>
+  <h3>今日の時間</h3>
+  <div class="card" id="todayTime"></div>
   <h3>毎日やること</h3>
   <div class="card" id="todayDaily"></div>
   <h3>次のジム</h3>
@@ -122,6 +124,13 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
   <h2>11〜12月の予定</h2>
   <p class="note">ジムの日をタップするとそのメニューへ。練習が早く終わり、チームWTがない日は、上半身だけのDay Cを追加。</p>
   <ul class="plan" id="planList"></ul>
+  <h2>睡眠</h2>
+  <div class="card"><b>毎日8時間。起きる時間をそろえる</b>
+  <table style="width:100%;border-collapse:collapse;font-size:15px;margin-top:8px"><thead><tr style="color:var(--mute);font-size:13px"><td>練習開始</td><td>集合</td><td>起きる</td><td>寝る（前の晩）</td></tr></thead><tbody>
+  <tr><td>8:30</td><td>7:15</td><td><b>6:15</b></td><td><b>22:15</b></td></tr>
+  <tr><td>10:00</td><td>8:45</td><td><b>7:45</b></td><td><b>23:45</b></td></tr>
+  <tr><td>昼・夕方・なし</td><td>―</td><td><b>8:00</b></td><td><b>24:00</b></td></tr></tbody></table>
+  <p class="tip">集合は練習の1時間15分前。休みの日も9時までには起きる。1限がある日は7:30起き。起きたらカーテンを開けて光を浴び、1時間以内に朝ごはん。昼寝は15時までに30分以内。睡眠を増やすとシュート成功率が上がったという研究もある。</p></div>
   <h2>5月までの流れ</h2>
   <div class="card"><b>12〜2月：基礎づくり</b><p class="tip">このメニューを重さ重視で。最初の1か月はフォームを固める。</p></div>
   <div class="card"><b>3〜4月：パワーへの転換</b><p class="tip">重さは少し下げて、挙げる速さを重視。ジャンプは週80〜120回の接地が目安。</p></div>
@@ -317,7 +326,19 @@ function renderDaily(){
 function tag(t,m){return t?`<a class="tag ${t==="A"?"tA":t==="B"?"tB":"tC"}" href="#gym-${t.toLowerCase()}">${esc(m)}</a>`:`<span class="tag tX">${esc(m)}</span>`}
 function planRow(p){const x=md(p[0]);return `<li class="${p[0]===TODAY?"today":""}"><div class="d num">${x.m}/${x.d}<small>${x.w}曜</small></div><div><div class="m">${esc(p[2])}</div><div class="t">部活：${esc(p[1])}</div></div>${p[3]?tag(p[3],"開く"):""}</li>`}
 function renderPlan(){$("planList").innerHTML=P.map(planRow).join("")}
+function hm(m){m=((m%1440)+1440)%1440;return Math.floor(m/60)+":"+pad(m%60)}
+function startOf(p){if(!p)return null;const m=String(p[1]).match(/(\d{1,2}):(\d{2})/);if(!m||!/練習|試合|紅白戦|部内戦|WT/.test(p[1]))return null;return +m[1]*60+ +m[2]}
+function wakeFor(p){const st=startOf(p);if(st==null)return {w:480,meet:null,st:null};const meet=st-75;return {w:meet<540?meet-60:480,meet,st}}
+function renderTime(){
+  const p=P.find(q=>q[0]===TODAY),t=new Date(TODAY+"T00:00:00");t.setDate(t.getDate()+1);const np=P.find(q=>q[0]===ymd(t));
+  const a=wakeFor(p),b=wakeFor(np);
+  const rows=[["起きる",hm(a.w)]];
+  if(a.meet!=null){if(a.st>=720)rows.push(["補食（団子・バナナ）",hm(a.meet-60)]);rows.push(["集合",hm(a.meet)]);rows.push(["練習・試合",hm(a.st)])}
+  rows.push(["今夜寝る",hm(b.w-480)+(b.meet!=null&&b.meet<540?"（明日は朝の練習）":"")]);
+  $("todayTime").innerHTML=rows.map(r=>`<div class="log" style="grid-template-columns:minmax(0,1fr) auto"><div>${esc(r[0])}</div><div class="w num">${esc(r[1])}</div></div>`).join("");
+}
 function renderToday(){
+  renderTime();
   const x=md(TODAY),p=P.find(q=>q[0]===TODAY);
   $("hdSub").textContent=`${x.m}月${x.d}日（${x.w}）`;
   let h;
