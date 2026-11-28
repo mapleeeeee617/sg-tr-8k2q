@@ -58,6 +58,15 @@ details{grid-column:1/-1}.sim{width:100%;max-width:380px;height:auto;display:blo
 .plan .d{font-size:22px;line-height:1;white-space:nowrap}.plan .d small{display:block;font:13px "Zen Kaku Gothic New";color:var(--mute)}
 .plan .t{font-size:14px;color:var(--mute)}.plan .m{font-weight:700}
 .plan li.today{background:var(--bl2);border-radius:10px}
+.cal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.cal-h b{font-size:18px}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.cal-g .w{font-size:12px;color:var(--mute)}
+.cal-d{min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 15px "Barlow Condensed",sans-serif;cursor:pointer;padding:3px 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cal-d.today{border:2px solid var(--bl)}.cal-d.sel{background:var(--ink);color:var(--bg)}
+.cal-d .dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
+.dot{font:700 10px "Zen Kaku Gothic New";padding:0 3px;border-radius:4px;color:#fff;line-height:14px}
+.dA{background:var(--or)}.dB{background:var(--bl)}.dC{background:#2a9d6f}.dS{background:#8a5cf6}.dP{background:var(--mute)}
+.shop li{padding:4px 0}
 .tag{font-size:13px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;text-decoration:none}
 .tC{background:#2a9d6f;color:#fff}.tA{background:var(--or);color:#fff}.tB{background:var(--bl);color:#fff}.tX{background:var(--line);color:var(--ink)}
 form.card{display:grid;gap:10px}
@@ -92,6 +101,7 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
   <div class="card hero" id="todayHero"></div>
   <h3>今日の時間</h3>
   <div class="card" id="todayTime"></div>
+  <div id="todayShop"></div>
   <h3>毎日やること</h3>
   <div class="card" id="todayDaily"></div>
   <h3>次のジム</h3>
@@ -121,6 +131,10 @@ nav a.on{color:var(--or);border-top-color:var(--or)}
 </section>
 
 <section id="plan">
+  <h2>カレンダー</h2>
+  <p class="note">日にちをタップすると、その日の練習・トレーニング・買うものが出ます。メモはこの端末に保存されます。</p>
+  <div class="card" id="cal"></div>
+  <div class="card" id="calDetail"></div>
   <h2>11〜12月の予定</h2>
   <p class="note">ジムの日をタップするとそのメニューへ。練習が早く終わり、チームWTがない日は、上半身だけのDay Cを追加。</p>
   <ul class="plan" id="planList"></ul>
@@ -323,7 +337,40 @@ function renderDaily(){
 }
 function tag(t,m){return t?`<a class="tag ${t==="A"?"tA":t==="B"?"tB":"tC"}" href="#gym-${t.toLowerCase()}">${esc(m)}</a>`:`<span class="tag tX">${esc(m)}</span>`}
 function planRow(p){const x=md(p[0]);return `<li class="${p[0]===TODAY?"today":""}"><div class="d num">${x.m}/${x.d}<small>${x.w}曜</small></div><div><div class="m">${esc(p[2])}</div><div class="t">部活：${esc(p[1])}</div></div>${p[3]?tag(p[3],"開く"):""}</li>`}
-function renderPlan(){$("planList").innerHTML=P.map(planRow).join("")}
+
+const BASE1=["鶏むね肉 1kg（帰ったら150gずつ冷凍）","卵 10個×2パック","納豆 3パック×2","豆腐 1丁","牛乳 1L","オイコス 4個","サバ水煮缶 2缶","冷凍ブロッコリー・冷凍ほうれん草","玉ねぎ・にんじん（なくなっていたら）","キャベツ 1/2玉","ネギ 1本・きのこ 1パック","ミニトマト","バナナ・みかん"];
+const BASE2=["豚こま 300g（2食分。2日以上先の分は冷凍）","キムチ（残りが少なければ）","ニラ 1束","牛乳 1L","豆腐 1丁","バナナ・ミニトマト"];
+const SHOP={
+"2026-11-28":{t:"最初のまとめ買い（練習のあと）",i:["鶏むね肉 1kg（帰ったら150gずつ冷凍）","豚こま 300g（2食分）","卵 10個×2パック","納豆 3パック×2","豆腐 1丁","牛乳 1L","オイコス 4個","サバ水煮缶 2缶","キムチ 1パック","冷凍ブロッコリー・冷凍ほうれん草","玉ねぎ 3個・にんじん 2本","キャベツ 1/2玉・ニラ 1束・ネギ 1本","きのこ 1パック・ミニトマト","バナナ・みかん"]},
+"2026-11-30":{t:"補充（ジム帰り）",i:["牛乳 1L","豆腐 1丁","バナナ・ミニトマト"]},
+"2026-12-04":{t:"① まとめ買い（ジム帰り）",i:BASE1},"2026-12-07":{t:"② 補充（ジム帰り）",i:BASE2},
+"2026-12-11":{t:"① まとめ買い",i:BASE1},"2026-12-14":{t:"② 補充",i:BASE2},
+"2026-12-18":{t:"① まとめ買い",i:BASE1},"2026-12-21":{t:"② 補充",i:BASE2},
+"2026-12-25":{t:"① まとめ買い（帰省するなら少なめに）",i:BASE1},"2026-12-28":{t:"② 補充（帰省するなら不要）",i:BASE2}};
+let calM=null,calSel=null;
+function shopHTML(sh){return `<b>${esc(sh.t)}</b><ul class="shop tip" style="margin:6px 0 0;padding-left:1.2em">${sh.i.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`}
+function renderCal(){
+  if(!calM){const t=new Date(TODAY+"T00:00:00");calM=[t.getFullYear(),t.getMonth()];if(calM[0]<2026||(calM[0]===2026&&calM[1]<10))calM=[2026,10]}
+  if(!calSel)calSel=TODAY;
+  const [y,m]=calM,first=new Date(y,m,1),days=new Date(y,m+1,0).getDate();
+  let g=["日","月","火","水","木","金","土"].map(w=>`<div class="w">${w}</div>`).join("")+"<div></div>".repeat(first.getDay());
+  for(let d=1;d<=days;d++){const k=y+"-"+pad(m+1)+"-"+pad(d),p=P.find(q=>q[0]===k);let dots="";
+    if(p&&p[3])dots+=`<span class="dot d${p[3]}">${p[3]}</span>`;
+    if(p&&/練習|試合|紅白戦|部内戦/.test(p[1]))dots+=`<span class="dot dP">練</span>`;
+    if(SHOP[k])dots+=`<span class="dot dS">買</span>`;
+    g+=`<button class="cal-d${k===TODAY?" today":""}${k===calSel?" sel":""}" data-cal="${k}" aria-label="${m+1}月${d}日">${d}<span class="dots">${dots}</span></button>`}
+  $("cal").innerHTML=`<div class="cal-h"><button class="btn" data-calm="-1" aria-label="前の月">‹</button><b>${y}年${m+1}月</b><button class="btn" data-calm="1" aria-label="次の月">›</button></div><div class="cal-g">${g}</div><p class="tip"><span class="dot dA">A</span> <span class="dot dB">B</span> <span class="dot dC">C</span> ジム　<span class="dot dP">練</span> 練習・試合　<span class="dot dS">買</span> 買い出し</p>`;
+  renderCalDetail();
+}
+function renderCalDetail(){
+  const k=calSel,x=md(k),p=P.find(q=>q[0]===k),sh=SHOP[k];let note="";try{note=localStorage.getItem("sg-note-"+k)||""}catch(e){}
+  let h=`<b style="font-size:18px">${x.m}月${x.d}日（${x.w}）</b>`;
+  if(p){h+=`<p style="margin:6px 0">部活：${esc(p[1])}<br>自分：<b>${esc(p[2])}</b> ${p[3]?tag(p[3],"メニューを開く"):""}</p>`}else{h+=`<p class="tip">予定はまだ入っていません（1月以降は部の予定表が出たら追加）。</p>`}
+  if(sh)h+=`<div style="margin-top:8px">${shopHTML(sh)}</div>`;
+  h+=`<label style="margin-top:10px">メモ<textarea id="calNote" rows="2" placeholder="この日のメモ（体調、やったこと、買ったもの）">${esc(note)}</textarea></label>`;
+  $("calDetail").innerHTML=h;
+}
+function renderPlan(){renderCal();$("planList").innerHTML=P.map(planRow).join("")}
 function hm(m){m=((m%1440)+1440)%1440;return Math.floor(m/60)+":"+pad(m%60)}
 function startOf(p){if(!p)return null;const m=String(p[1]).match(/(\d{1,2}):(\d{2})/);if(!m||!/練習|試合|紅白戦|部内戦|WT/.test(p[1]))return null;return +m[1]*60+ +m[2]}
 function wakeFor(p){const st=startOf(p);if(st==null)return {w:480,meet:null,st:null};const meet=st-75;return {w:meet<540?meet-60:480,meet,st}}
@@ -337,6 +384,7 @@ function renderTime(){
 }
 function renderToday(){
   renderTime();
+  const ts=SHOP[TODAY];$("todayShop").innerHTML=ts?`<h3>今日の買い出し</h3><div class="card">${shopHTML(ts)}</div>`:"";
   const x=md(TODAY),p=P.find(q=>q[0]===TODAY);
   $("hdSub").textContent=`${x.m}月${x.d}日（${x.w}）`;
   let h;
@@ -383,12 +431,15 @@ function route(){
 }
 
 document.addEventListener("click",ev=>{
+  const cd=ev.target.closest("[data-cal]");if(cd){calSel=cd.dataset.cal;renderCal();return}
+  const cm=ev.target.closest("[data-calm]");if(cm){let [y,m]=calM;m+=+cm.dataset.calm;if(m<0){m=11;y--}if(m>11){m=0;y++}calM=[y,m];renderCal();return}
   const l=ev.target.closest(".lamp");
   if(l){const id=l.dataset.ex,i=+l.dataset.i;const a=checks[id]||[];checks[id]=a.includes(i)?a.filter(x=>x!==i):[...a,i];saveChecks();l.classList.toggle("done");l.setAttribute("aria-pressed",checks[id].includes(i));return}
   const tk=ev.target.closest("[data-tk]");if(tk){ev.preventDefault();const sp=TSPEC[tk.dataset.tk];const nm=tk.closest(".chk").querySelector("b").textContent;startTimer(sp[0],sp[1],sp[2],tk.dataset.tk,nm);return}
   const rt=ev.target.closest("[data-rest]");if(rt){startTimer(+rt.dataset.rest,1,0,null,"セット間の休憩");return}
   if(ev.target.closest("#timer")){stopTimer();return}
 });
+document.addEventListener("input",ev=>{if(ev.target.id==="calNote"){try{localStorage.setItem("sg-note-"+calSel,ev.target.value)}catch(e){}}});
 document.addEventListener("change",ev=>{
   const c=ev.target.closest("[data-ck]");if(c){checks[c.dataset.ck]=c.checked;saveChecks()}
 });
